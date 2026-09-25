@@ -83,15 +83,27 @@ for (const p of fresh) {
     console.log(`  (DRY_RUN) sparade mejl-${p.slug}.html`);
     continue;
   }
-  const campaign = await brevo('/emailCampaigns', {
-    name: `Nytt inlägg: ${p.title} (${p.date})`,
-    subject: `Nytt inlägg: ${p.title}`,
-    previewText: p.excerpt.slice(0, 120),
-    sender: { name: SENDER_NAME, email: SENDER_EMAIL },
-    htmlContent: emailHtml(p),
-    recipients: { listIds: [Number(BREVO_LIST_ID)] },
-    inlineImageActivation: false,
-  });
+  let campaign;
+  try {
+    campaign = await brevo('/emailCampaigns', {
+      name: `Nytt inlägg: ${p.title} (${p.date})`,
+      subject: `Nytt inlägg: ${p.title}`,
+      previewText: p.excerpt.slice(0, 120),
+      sender: { name: SENDER_NAME, email: SENDER_EMAIL },
+      htmlContent: emailHtml(p),
+      recipients: { listIds: [Number(BREVO_LIST_ID)] },
+      inlineImageActivation: false,
+    });
+  } catch (err) {
+    // Ingen har prenumererat (bekräftat) än → inget fel. Inlägget markeras
+    // INTE som mejlat, så det skickas vid nästa publicering om någon hunnit
+    // prenumerera (så länge inlägget är högst 30 dagar gammalt).
+    if (/no contacts associated/i.test(String(err.message))) {
+      console.log(`  Listan ${BREVO_LIST_ID} har inga bekräftade prenumeranter än – inget mejl skickat.`);
+      continue;
+    }
+    throw err;
+  }
   await brevo(`/emailCampaigns/${campaign.id}/sendNow`);
   notified.push(p.slug);
   writeFileSync(STATE, JSON.stringify(notified, null, 2) + '\n');
