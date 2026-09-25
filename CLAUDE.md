@@ -38,3 +38,4 @@ Alexanders utbytesblogg från Seoul (hösten 2026). Svenska, publik, ingen inlog
 - Hela repot är publikt (krav för gratis GitHub Pages) – ägaren har accepterat det.
 - Brevo gratis: 300 mejl/dag, "Sent with Brevo"-märkning.
 - npm 11 kräver godkända install-skript: se `allowScripts` i package.json (esbuild, ffmpeg-static).
+- `scripts/check-media.mjs` (jobbet `kontroll` i workflowen) fäller körningen om ett inlägg hänvisar till bilder/videor som saknas i repot → GitHub mejlar ägaren. `notify.mjs` hoppar över sådana inlägg tills de lagats. Bakgrund: vid första testet från iPhone sparades texten men inga mediefiler (troligen tillfälligt/nätverk; samma video gick bra senare, iOS krymper själv videon vid uppladdning, 46 MB → 6 MB).

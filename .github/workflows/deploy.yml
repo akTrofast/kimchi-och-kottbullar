@@ -5,6 +5,8 @@
 #   1. build  – krymper nya videor, bygger sidan med Astro
 #   2. deploy – lägger ut sidan på GitHub Pages
 #   3. notify – skickar mejl om nya inlägg via Brevo (hoppas över om Brevo inte är inställt)
+#   4. kontroll – kontrollerar att alla bilder/videor kom med; om inte blir
+#      körningen röd och GitHub mejlar Alexander automatiskt
 #
 # Kan också köras manuellt: GitHub → fliken Actions → "Bygg och publicera" → Run workflow.
 name: Bygg och publicera
@@ -114,3 +116,13 @@ jobs:
             git pull --rebase
             git push
           fi
+
+  kontroll:
+    name: Kontrollera att alla bilder kom med
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+      - run: node scripts/check-media.mjs

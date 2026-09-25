@@ -16,6 +16,7 @@
 //   SITE_URL        – sidans adress (sätts automatiskt av workflowen)
 // Saknas BREVO_API_KEY hoppar skriptet tyst över allt (mejl är valfritt).
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { findMissing } from './check-media.mjs';
 
 const STATE = 'src/data/notifierade.json';
 const { BREVO_API_KEY, BREVO_LIST_ID, SENDER_EMAIL, SENDER_NAME = 'Kimchi & Köttbullar', SITE_URL, DRY_RUN } = process.env;
@@ -34,8 +35,11 @@ const posts = await res.json();
 
 const notified = existsSync(STATE) ? JSON.parse(readFileSync(STATE, 'utf8')) : [];
 const cutoff = Date.now() - MAX_AGE_DAYS * 86400000;
+// Inlägg där bilder/videor saknas mejlas inte ut förrän de är lagade.
+const broken = new Set(findMissing().map((r) => r.slug));
+for (const slug of broken) console.log(`Hoppar över ${slug} tills alla bilder finns på plats.`);
 const fresh = posts
-  .filter((p) => !notified.includes(p.slug) && new Date(p.date).valueOf() >= cutoff)
+  .filter((p) => !notified.includes(p.slug) && !broken.has(p.slug) && new Date(p.date).valueOf() >= cutoff)
   .reverse(); // äldst först om flera publicerats samtidigt
 
 if (!fresh.length) {
