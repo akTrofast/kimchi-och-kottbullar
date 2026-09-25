@@ -6,7 +6,7 @@ bilder:
   - img_3618.webp
   - img_3621.webp
 videor:
-  - img_3635.mov
+  - img_3635-web.mp4
 platser: []
 kommande: null
 utkast: false
