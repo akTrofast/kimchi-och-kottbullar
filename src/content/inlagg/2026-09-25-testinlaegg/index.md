@@ -19,7 +19,7 @@ platser:
 kommande:
   text: Chuseok ”Lion Dance”
   till: 2026-09-28
-utkast: true
+utkast: false
 ---
 
 Idag togs en chill dag. Tidigare i veckan har vi haft fullt ös medvetslös pga besökare från Sverige som har fått se hela Seoul.
