@@ -1,6 +1,6 @@
 ---
 title: Första månaden i Seoul (3)
-date: 2026-09-26
+date: 2026-09-25
 bilder:
   - img_3625.webp
   - img_3641.webp
