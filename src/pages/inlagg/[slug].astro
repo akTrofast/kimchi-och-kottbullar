@@ -1,0 +1,75 @@
+---
+// Ett enskilt inlägg: rubrik, platser, omslagsbild, text, alla bilder/videor
+// och länkar till föregående/nästa inlägg.
+import { render } from 'astro:content';
+import { getImage } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import MediaGrid from '../../components/MediaGrid.astro';
+import { getPosts, slugOf, mediaOf, coverOf, placesOf, formatDate, countLabel, excerptOf, type Post } from '../../lib/posts';
+import { postUrl, url } from '../../lib/url';
+import { placeIdFor } from '../../lib/places';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post, i) => ({
+    params: { slug: slugOf(post) },
+    // posts är sorterade nyast först
+    props: { post, newer: posts[i - 1], older: posts[i + 1] },
+  }));
+}
+
+interface Props { post: Post; newer?: Post; older?: Post }
+const { post, newer, older } = Astro.props;
+const { Content } = await render(post);
+const media = mediaOf(post);
+const places = placesOf(post);
+const cover = coverOf(post);
+const allPosts = await getPosts();
+const ogImage = cover ? new URL((await getImage({ src: cover, width: 1200, format: 'jpg' })).src, Astro.site).href : undefined;
+---
+
+<Base title={post.data.title} description={excerptOf(post, 160)} image={ogImage}>
+  <header class="wrap post-head">
+    <div class="eyebrow">
+      {formatDate(post.data.date)}{countLabel(post) && ` · ${countLabel(post)}`}
+      {post.data.utkast && <span class="draft-badge">UTKAST</span>}
+    </div>
+    <h1>{post.data.title}</h1>
+    {
+      places.length > 0 && (
+        <div class="chips">
+          {places.map((p) => (
+            <a class="chip" href={url(`/karta/#${placeIdFor(allPosts, post, p)}`)}>
+              {p.namn}{p.datum && ` · ${p.datum}`}
+            </a>
+          ))}
+        </div>
+      )
+    }
+  </header>
+
+  <MediaGrid items={media} cover>
+    <article class="prose">
+      <Content />
+    </article>
+  </MediaGrid>
+
+  <nav class="wrap post-nav" aria-label="Fler inlägg">
+    <div>
+      {older && (
+        <a href={postUrl(slugOf(older))}>
+          <small>← Föregående</small>
+          <span>{older.data.title}</span>
+        </a>
+      )}
+    </div>
+    <div class="next">
+      {newer && (
+        <a href={postUrl(slugOf(newer))}>
+          <small>Nästa →</small>
+          <span>{newer.data.title}</span>
+        </a>
+      )}
+    </div>
+  </nav>
+</Base>

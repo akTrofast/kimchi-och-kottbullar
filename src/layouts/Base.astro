@@ -1,0 +1,66 @@
+---
+// Grundmall för alla sidor: <head>, sidhuvud med meny, prenumerationsruta och sidfot.
+import '@fontsource/instrument-serif/400.css';
+import '@fontsource/instrument-serif/400-italic.css';
+import '@fontsource-variable/inter';
+import '../styles/global.css';
+import Subscribe from '../components/Subscribe.astro';
+import settings from '../data/installningar.json';
+import { url } from '../lib/url';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string; // absolut URL för förhandsvisning när länken delas (t.ex. i Messenger/WhatsApp)
+  active?: 'hem' | 'galleri' | 'karta';
+}
+const { title, description = settings.underrubrik, image, active } = Astro.props;
+const fullTitle = title ? `${title} – ${settings.titel}` : settings.titel;
+const [first, second] = settings.titel.split('&').map((s) => s.trim());
+---
+
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    {image && <meta property="og:image" content={image} />}
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#111110" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={url('/icon-192.png')} />
+    <slot name="head" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="logo" href={url('/')}>
+          {second ? <>{first} <span>&amp;</span> {second}</> : settings.titel}
+        </a>
+        <nav class="nav" aria-label="Huvudmeny">
+          <a href={url('/')} aria-current={active === 'hem' ? 'page' : undefined}>Inlägg</a>
+          <a href={url('/galleri/')} aria-current={active === 'galleri' ? 'page' : undefined}>Galleri</a>
+          <a href={url('/karta/')} aria-current={active === 'karta' ? 'page' : undefined}>Karta</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <Subscribe />
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <span>{settings.titel} · {settings.underrubrik}</span>
+        <span>Alexander Trofast</span>
+      </div>
+    </footer>
+  </body>
+</html>

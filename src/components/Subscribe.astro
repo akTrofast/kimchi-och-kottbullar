@@ -1,0 +1,49 @@
+---
+// Anmälan till mejlnotiser. Formuläret skickas direkt till Brevo (gratis
+// e-posttjänst) – vi sparar inga adresser själva. Brevo skickar ett
+// bekräftelsemejl ("double opt-in") innan adressen läggs till i listan.
+// Adressen till Brevo-formuläret ställs in i src/data/teknik.json.
+import teknik from '../data/teknik.json';
+const action = teknik.brevoFormUrl;
+---
+
+<section class="subscribe" id="prenumerera">
+  <div class="wrap">
+    <div>
+      <h2>Få ett mejl vid nya inlägg</h2>
+      <p>Ungefär ett mejl i veckan, bara när något nytt publiceras. Avsluta när du vill.</p>
+    </div>
+    <div>
+      {
+        action ? (
+          <>
+            <form id="subscribe-form" method="POST" action={action} target="brevo-frame">
+              <label class="sr-only" for="sub-email">E-postadress</label>
+              <input id="sub-email" type="email" name="EMAIL" placeholder="din@mejl.se" autocomplete="email" required />
+              {/* Fälla för spam-robotar: riktiga besökare ser aldrig fältet. */}
+              <input class="hp" type="text" name="email_address_check" value="" tabindex="-1" autocomplete="off" aria-hidden="true" />
+              <input type="hidden" name="locale" value="sv" />
+              <button class="btn" type="submit">Prenumerera</button>
+            </form>
+            <p class="form-msg" id="subscribe-msg" role="status" />
+            <iframe name="brevo-frame" title="Brevo" hidden />
+          </>
+        ) : (
+          <p class="form-msg">Mejlnotiser aktiveras snart.</p>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  // Formuläret postas till en dold iframe så att besökaren stannar kvar på sidan.
+  const form = document.getElementById('subscribe-form') as HTMLFormElement | null;
+  const msg = document.getElementById('subscribe-msg');
+  form?.addEventListener('submit', () => {
+    setTimeout(() => {
+      if (msg) msg.textContent = 'Tack! Kolla din inkorg och bekräfta din adress (titta i skräpposten om inget dyker upp).';
+      form.reset();
+    }, 400);
+  });
+</script>

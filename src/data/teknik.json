@@ -1,0 +1,4 @@
+{
+  "_kommentar": "Tekniska inställningar som INTE visas i redigeraren. brevoFormUrl = adressen från Brevos inbäddningskod för anmälningsformuläret (sätts i fas 3). Tom = anmälningsrutan visar 'kommer snart'.",
+  "brevoFormUrl": ""
+}

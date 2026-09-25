@@ -1,0 +1,75 @@
+---
+// Startsidan: senaste inlägget som stor bild, statusrad, tidigare inlägg och
+// en remsa med de senaste bilderna.
+import { Image, getImage } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import StatusBar from '../components/StatusBar.astro';
+import PostCard from '../components/PostCard.astro';
+import { getPosts, slugOf, coverOf, imagesOf, formatDate, countLabel, excerptOf } from '../lib/posts';
+import { postUrl, url } from '../lib/url';
+
+const posts = await getPosts();
+const [latest, ...older] = posts;
+const cover = latest && coverOf(latest);
+const ogImage = cover ? new URL((await getImage({ src: cover, width: 1200, format: 'jpg' })).src, Astro.site).href : undefined;
+
+// De 8 senaste bilderna från alla inlägg (hoppar över omslagsbilden i toppen).
+const recent = posts.flatMap((p) => imagesOf(p).map((image) => ({ image, slug: slugOf(p) }))).slice(1, 9);
+---
+
+<Base active="hem" image={ogImage}>
+  {
+    latest ? (
+      <a class:list={['hero', !cover && 'hero-plain']} href={postUrl(slugOf(latest))}>
+        {cover && <Image src={cover} alt="" widths={[640, 1000, 1400, 2048]} sizes="100vw" loading="eager" fetchpriority="high" quality={80} />}
+        <div class="hero-text">
+          <div class="eyebrow">
+            Senaste inlägget · {formatDate(latest.data.date)}
+            {countLabel(latest) && ` · ${countLabel(latest)}`}
+          </div>
+          <h1>{latest.data.title}</h1>
+          <p>{excerptOf(latest, 140)}</p>
+        </div>
+      </a>
+    ) : (
+      <div class="wrap page-head">
+        <h1>Snart kommer första inlägget</h1>
+      </div>
+    )
+  }
+
+  <StatusBar posts={posts} />
+
+  <div class="wrap">
+    {
+      older.length > 0 && (
+        <>
+          <div class="section-title">
+            <h2>Tidigare inlägg</h2>
+          </div>
+          <div class="cards">
+            {older.map((post) => <PostCard post={post} />)}
+          </div>
+        </>
+      )
+    }
+
+    {
+      recent.length >= 4 && (
+        <>
+          <div class="section-title">
+            <h2>Senaste bilderna</h2>
+            <a href={url('/galleri/')}>Hela galleriet →</a>
+          </div>
+          <div class="strip">
+            {recent.map(({ image, slug }) => (
+              <a href={postUrl(slug)} aria-label="Till inlägget">
+                <Image src={image} alt="" widths={[300, 500]} sizes="(min-width: 800px) 12.5vw, 25vw" loading="lazy" quality={75} />
+              </a>
+            ))}
+          </div>
+        </>
+      )
+    }
+  </div>
+</Base>

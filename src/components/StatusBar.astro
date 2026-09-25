@@ -1,0 +1,64 @@
+---
+// Raden under toppbilden på startsidan:
+//  • Dagräknare ("Dag 34 i Korea") räknad från ankomstdatum i Inställningar.
+//  • "Kommande veckan" från det senaste inlägget som har fältet ifyllt.
+// Båda räknas om i besökarens webbläsare, så de stämmer även när det gått
+// dagar sedan senaste publicering. "Kommande veckan" döljs automatiskt när
+// "Visa till och med"-datumet har passerat.
+import settings from '../data/installningar.json';
+import type { Post } from '../lib/posts';
+
+interface Props { posts: Post[] }
+const { posts } = Astro.props;
+
+const DAY = 86400000;
+const today = new Date();
+const ankomst = settings.ankomst ? new Date(settings.ankomst) : null;
+const dayN = ankomst ? Math.max(1, Math.floor((today.valueOf() - ankomst.valueOf()) / DAY) + 1) : null;
+
+const withKommande = posts.find((p) => p.data.kommande?.text);
+const kommande = withKommande?.data.kommande;
+// Om inget slutdatum angetts: visa i 10 dagar efter att inlägget publicerades.
+const till = kommande?.till ?? (withKommande ? new Date(withKommande.data.date.valueOf() + 10 * DAY) : undefined);
+const tillIso = till?.toISOString().slice(0, 10);
+const showKommande = kommande?.text && till && till.valueOf() + DAY > today.valueOf();
+---
+
+<div class="wrap">
+  <div class="status">
+    {
+      dayN && (
+        <span class="day" data-ankomst={settings.ankomst} data-hemkomst={settings.hemkomst || undefined} data-mall={settings.dagraknare}>
+          {settings.dagraknare.replace('{n}', String(dayN))}
+        </span>
+      )
+    }
+    {
+      showKommande && (
+        <span class="kommande" data-till={tillIso}>
+          <span class="label">Kommande veckan</span>
+          <span>{kommande!.text}</span>
+        </span>
+      )
+    }
+  </div>
+</div>
+
+<script>
+  const DAY = 86400000;
+  const now = Date.now();
+  const day = document.querySelector<HTMLElement>('[data-ankomst]');
+  if (day) {
+    const start = new Date(day.dataset.ankomst!).valueOf();
+    const end = day.dataset.hemkomst ? new Date(day.dataset.hemkomst).valueOf() : null;
+    if (end && now > end + DAY) {
+      const total = Math.floor((end - start) / DAY) + 1;
+      day.textContent = `${total} dagar i Asien – nu hemma igen`;
+    } else {
+      const n = Math.max(1, Math.floor((now - start) / DAY) + 1);
+      day.textContent = (day.dataset.mall || 'Dag {n}').replace('{n}', String(n));
+    }
+  }
+  const k = document.querySelector<HTMLElement>('[data-till]');
+  if (k && new Date(k.dataset.till!).valueOf() + DAY < now) k.remove();
+</script>

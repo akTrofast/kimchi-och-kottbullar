@@ -1,0 +1,116 @@
+# Bygger och publicerar sidan på GitHub Pages varje gång något ändras
+# (t.ex. när Alexander trycker "Publicera" i redigeraren), och mejlar sedan
+# prenumeranterna om nya inlägg.
+#
+#   1. build  – krymper nya videor, bygger sidan med Astro
+#   2. deploy – lägger ut sidan på GitHub Pages
+#   3. notify – skickar mejl om nya inlägg via Brevo (hoppas över om Brevo inte är inställt)
+#
+# Kan också köras manuellt: GitHub → fliken Actions → "Bygg och publicera" → Run workflow.
+name: Bygg och publicera
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write # för att spara krympta videor och listan över mejlade inlägg
+  pages: write
+  id-token: write
+
+# Kör en publicering i taget; en ny väntar tills den förra är klar.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      site_url: ${{ steps.pages.outputs.base_url }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Krymp nya videor
+        run: node scripts/process-videos.mjs
+
+      - name: Spara krympta videor i repot
+        run: |
+          if [ -n "$(git status --porcelain src/content)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -A src/content
+            git commit -m "Krymp videor (automatiskt)"
+            git pull --rebase
+            git push
+          fi
+
+      - id: pages
+        uses: actions/configure-pages@v6
+
+      # Sparar färdigoptimerade bilder mellan byggen så att det går snabbare.
+      - uses: actions/cache@v6
+        with:
+          path: node_modules/.astro
+          key: astro-${{ github.run_id }}
+          restore-keys: astro-
+
+      - name: Bygg sidan
+        run: npm run build
+        env:
+          SITE_URL: ${{ steps.pages.outputs.origin }}
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
+
+  notify:
+    needs: [build, deploy]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Mejla prenumeranter om nya inlägg
+        run: node scripts/notify.mjs
+        env:
+          SITE_URL: ${{ needs.build.outputs.site_url }}
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+          BREVO_LIST_ID: ${{ vars.BREVO_LIST_ID }}
+          SENDER_EMAIL: ${{ vars.SENDER_EMAIL }}
+          SENDER_NAME: ${{ vars.SENDER_NAME }}
+
+      - name: Spara vilka inlägg som mejlats ut
+        run: |
+          if [ -n "$(git status --porcelain src/data/notifierade.json)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add src/data/notifierade.json
+            git commit -m "Notiser skickade (automatiskt)"
+            git pull --rebase
+            git push
+          fi

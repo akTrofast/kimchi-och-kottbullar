@@ -1,0 +1,22 @@
+---
+// Kort för ett inlägg i listan på startsidan.
+import { Image } from 'astro:assets';
+import { type Post, slugOf, coverOf, formatDate, countLabel, excerptOf } from '../lib/posts';
+import { postUrl } from '../lib/url';
+
+interface Props { post: Post }
+const { post } = Astro.props;
+const cover = coverOf(post);
+---
+
+<a class="card" href={postUrl(slugOf(post))}>
+  <div class="img">
+    {cover && <Image src={cover} alt="" widths={[400, 700, 1000]} sizes="(min-width: 1100px) 33vw, (min-width: 760px) 50vw, 100vw" loading="lazy" quality={80} />}
+  </div>
+  <div class="meta">
+    {formatDate(post.data.date)}{countLabel(post) && ` · ${countLabel(post)}`}
+    {post.data.utkast && <span class="draft-badge">UTKAST</span>}
+  </div>
+  <h3>{post.data.title}</h3>
+  <p>{excerptOf(post, 120)}</p>
+</a>

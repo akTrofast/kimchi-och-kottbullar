@@ -1,0 +1,97 @@
+---
+// Rutnät med bilder och videor. Ett tryck öppnar helskärmsvisning där man
+// sveper mellan bilderna (PhotoSwipe, se src/scripts/lightbox.ts).
+//
+// layout="magazine": varierat rutnät (stående bilder blir höga, var femte
+//                    liggande bild blir extra stor).
+// layout="square":   jämna kvadrater (används i galleriet).
+import { Image, getImage } from 'astro:assets';
+import type { MediaItem } from '../lib/posts';
+
+interface Props {
+  items: MediaItem[];
+  layout?: 'magazine' | 'square';
+  caption?: string; // HTML som visas under bilden i helskärm (t.ex. länk till inlägget)
+  // cover: första objektet visas som stor omslagsbild överst. Det som läggs
+  // som barn (<slot />, t.ex. inläggets text) hamnar mellan omslag och rutnät.
+  cover?: boolean;
+}
+const { items: all, layout = 'magazine', caption, cover = false } = Astro.props;
+const coverItem = cover && all[0]?.kind === 'image' ? all[0] : undefined;
+const items = coverItem ? all.slice(1) : all;
+const coverLarge = coverItem
+  ? await getImage({ src: coverItem.image, width: Math.min(coverItem.image.width, 2048), format: 'webp', quality: 82 })
+  : null;
+
+const sizes =
+  layout === 'square'
+    ? '(min-width: 1100px) 17vw, (min-width: 700px) 25vw, 33vw'
+    : '(min-width: 1100px) 25vw, (min-width: 760px) 33vw, 50vw';
+
+let landscapeCount = 0;
+const tiles = await Promise.all(
+  items.map(async (item) => {
+    const img = item.kind === 'image' ? item.image : item.poster;
+    const portrait = img ? img.height > img.width * 1.1 : item.kind === 'video';
+    let cls = '';
+    if (layout === 'magazine') {
+      if (portrait) cls = 'tall';
+      else if (landscapeCount++ % 5 === 0) cls = 'feature';
+    }
+    // Stor version för helskärmsvisningen (högst 2048 px).
+    const large = img ? await getImage({ src: img, width: Math.min(img.width, 2048), format: 'webp', quality: 82 }) : null;
+    return { item, img, cls, large };
+  }),
+);
+---
+
+<div data-gallery>
+{
+  coverItem && coverLarge && (
+    <a class="media post-cover" href={coverLarge.src} data-pswp-width={coverLarge.attributes.width} data-pswp-height={coverLarge.attributes.height} data-caption={caption}>
+      <Image src={coverItem.image} alt="" widths={[800, 1400, 2048]} sizes="100vw" loading="eager" fetchpriority="high" quality={80} />
+    </a>
+  )
+}
+<slot />
+<div class={layout === 'square' ? 'gallery-grid' : 'media-grid'}>
+  {
+    tiles.map(({ item, img, cls, large }) =>
+      item.kind === 'image' ? (
+        <a
+          class:list={['media', cls]}
+          href={large!.src}
+          data-pswp-width={large!.attributes.width}
+          data-pswp-height={large!.attributes.height}
+          data-caption={caption}
+        >
+          <Image src={img!} alt="" widths={[400, 800, 1200]} sizes={cls === 'feature' ? sizes.replace(/(\d+)vw/g, (_, n) => `${n * 2}vw`) : sizes} loading="lazy" decoding="async" quality={80} />
+        </a>
+      ) : (
+        <a
+          class:list={['media', cls]}
+          href={item.src}
+          data-video={item.src}
+          data-poster={large?.src}
+          data-pswp-width={large?.attributes.width ?? 1080}
+          data-pswp-height={large?.attributes.height ?? 1920}
+          data-caption={caption}
+          aria-label="Spela video"
+        >
+          {img ? (
+            <Image src={img} alt="" widths={[400, 800]} sizes={sizes} loading="lazy" decoding="async" quality={80} />
+          ) : (
+            <video src={item.src} muted playsinline preload="metadata" />
+          )}
+          <span class="play" />
+        </a>
+      ),
+    )
+  }
+</div>
+</div>
+
+<script>
+  import { initLightboxes } from '../scripts/lightbox';
+  initLightboxes();
+</script>

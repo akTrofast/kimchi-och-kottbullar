@@ -1,0 +1,29 @@
+{
+  "name": "kimchi-och-kottbullar",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Kimchi & Köttbullar – Alexanders utbytesblogg från Seoul (Astro + Sveltia CMS, hostad på GitHub Pages).",
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/copy-cms.mjs && astro dev",
+    "build": "node scripts/copy-cms.mjs && astro build",
+    "preview": "astro preview",
+    "videos": "node scripts/process-videos.mjs",
+    "examples": "node scripts/generate-examples.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource/instrument-serif": "^5.3.0",
+    "@sveltia/cms": "0.221.0",
+    "astro": "7.3.5",
+    "leaflet": "1.9.4",
+    "photoswipe": "5.4.4"
+  },
+  "devDependencies": {
+    "ffmpeg-static": "5.3.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "ffmpeg-static@5.3.0": true
+  }
+}

@@ -1,0 +1,144 @@
+---
+// Karta: en nål per unik plats (se src/lib/places.ts för hur platser slås ihop).
+// Tryck på en nål → ruta med förhandsvisningar av alla inlägg kopplade till platsen.
+// Nålarna binds ihop med en streckad linje i den ordning platserna besöktes.
+// Kartbilder från OpenStreetMap (gratis, ingen nyckel; källan anges i hörnet).
+import { getImage } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import { getPosts, slugOf, coverOf, formatShort } from '../lib/posts';
+import { groupPlaces } from '../lib/places';
+import { postUrl } from '../lib/url';
+
+const posts = await getPosts();
+const { groups, route } = groupPlaces(posts);
+
+const thumbs = new Map<string, string | null>();
+for (const post of posts) {
+  const cover = coverOf(post);
+  thumbs.set(slugOf(post), cover ? (await getImage({ src: cover, width: 240, height: 240, fit: 'cover', format: 'webp', quality: 72 })).src : null);
+}
+
+const places = groups.map((g) => ({
+  id: g.id,
+  namn: g.namn,
+  lat: g.lat,
+  lng: g.lng,
+  posts: g.visits.map(({ post, datum }) => ({
+    slug: slugOf(post),
+    title: post.data.title,
+    date: formatShort(post.data.date),
+    datum,
+    url: postUrl(slugOf(post)),
+    thumb: thumbs.get(slugOf(post)),
+  })),
+}));
+
+---
+
+<Base title="Karta" active="karta">
+  <link slot="head" rel="preconnect" href="https://tile.openstreetmap.org" />
+  <div class="wrap">
+    <header class="page-head">
+      <h1>Karta</h1>
+      <p>{places.length} platser hittills. Tryck på en nål för att se inläggen därifrån.</p>
+    </header>
+  </div>
+  <div class="wrap">
+    <div id="map" class="map" role="region" aria-label="Karta över besökta platser"></div>
+    <ul class="place-list">
+      {
+        places
+          .map((p, i) => ({ p, i }))
+          .reverse()
+          .map(({ p, i }) => (
+            <li>
+              <button type="button" data-index={i}>{p.namn}</button>
+              <small>{p.posts.length} inlägg · {p.posts.map((x) => x.datum || x.date).join(', ')}</small>
+            </li>
+          ))
+      }
+    </ul>
+  </div>
+  <script type="application/json" id="places-data" set:html={JSON.stringify({ places, route })} />
+</Base>
+
+<script>
+  import L from 'leaflet';
+  import 'leaflet/dist/leaflet.css';
+
+  type PostRef = { slug: string; title: string; date: string; datum?: string; url: string; thumb?: string | null };
+  type Place = { id: string; namn: string; lat: number; lng: number; posts: PostRef[] };
+  const { places, route }: { places: Place[]; route: number[] } = JSON.parse(document.getElementById('places-data')!.textContent || '{}');
+  const esc = (s = '') => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+
+  const map = L.map('map', { scrollWheelZoom: false, zoomControl: true }).setView([36.3, 127.8], 7);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    maxZoom: 19,
+    className: 'map-tiles', // tonas ner med CSS så att kartan passar sidans stil
+  }).addTo(map);
+
+  // Popup: platsens namn + en förhandsvisning per inlägg.
+  const popupHtml = (p: Place) =>
+    `<div class="map-popup"><div class="map-popup-title">${esc(p.namn)}<span>${p.posts.length} inlägg</span></div>` +
+    `<div class="map-popup-list">` +
+    p.posts
+      .map(
+        (x) =>
+          `<a class="map-post" href="${x.url}">${x.thumb ? `<img src="${x.thumb}" alt="" loading="lazy">` : '<span class="noimg"></span>'}` +
+          `<span><strong>${esc(x.title)}</strong><small>${esc(x.datum || x.date)}</small></span></a>`,
+      )
+      .join('') +
+    `</div></div>`;
+
+  const markers = places.map((p) => {
+    const n = p.posts.length;
+    const icon = L.divIcon({
+      className: '',
+      html: `<div class="pin${n > 1 ? ' pin-multi' : ''}">${n > 1 ? n : ''}</div>`,
+      iconSize: n > 1 ? [24, 24] : [16, 16],
+      iconAnchor: n > 1 ? [12, 12] : [8, 8],
+    });
+    return L.marker([p.lat, p.lng], { icon, title: p.namn })
+      .addTo(map)
+      .bindPopup(popupHtml(p), { maxWidth: 300, minWidth: 240, autoPanPadding: [20, 20] });
+  });
+
+  const pts = places.map((p) => [p.lat, p.lng] as [number, number]);
+  if (route.length > 1) {
+    const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#c2361f';
+    L.polyline(route.map((i) => pts[i]), { color: accent, weight: 2, opacity: 0.6, dashArray: '4 8' }).addTo(map);
+  }
+  if (pts.length > 1) map.fitBounds(L.latLngBounds(pts), { padding: [40, 40], maxZoom: 10 });
+  else if (pts.length === 1) map.setView(pts[0], 10);
+
+  // Aktivera scroll-zoom först när man klickat i kartan (så sidan går att scrolla förbi).
+  map.once('focus', () => map.scrollWheelZoom.enable());
+
+  // scroll=true: klick i listan (flyg dit med animation). false: vid sidladdning (hoppa direkt).
+  const focus = (i: number, scroll = true) => {
+    const zoom = Math.max(map.getZoom(), 11);
+    if (scroll) {
+      map.flyTo(markers[i].getLatLng(), zoom);
+      map.once('moveend', () => markers[i].openPopup());
+      document.getElementById('map')!.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      map.setView(markers[i].getLatLng(), zoom, { animate: false });
+      markers[i].openPopup();
+    }
+  };
+  document.querySelectorAll<HTMLButtonElement>('.place-list button').forEach((btn) =>
+    btn.addEventListener('click', () => focus(Number(btn.dataset.index))),
+  );
+
+  // Adress med #plats-busan (från ett inlägg) → visa den platsen.
+  // Adress med #<inläggets namn> → visa alla platser i det inlägget.
+  const target = decodeURIComponent(location.hash.slice(1));
+  if (target) {
+    const byPlace = places.findIndex((p) => p.id === target);
+    const byPost = places.map((p, i) => (p.posts.some((x) => x.slug === target) ? i : -1)).filter((i) => i >= 0);
+    if (byPlace >= 0) focus(byPlace, false);
+    else if (byPost.length === 1) focus(byPost[0], false);
+    else if (byPost.length > 1) map.fitBounds(L.latLngBounds(byPost.map((i) => pts[i])), { padding: [60, 60], maxZoom: 11 });
+  }
+</script>

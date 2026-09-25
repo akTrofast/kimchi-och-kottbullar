@@ -1,0 +1,169 @@
+# Konfiguration för redigeraren (Sveltia CMS) på <sidans adress>/admin/
+# Fälten här måste matcha src/content.config.ts.
+# Dokumentation: https://sveltiacms.app/en/docs
+
+backend:
+  name: github
+  repo: akTrofast/kimchi-och-kottbullar
+  branch: main
+  commit_messages:
+    create: 'Nytt inlägg: {{slug}}'
+    update: 'Uppdatera {{slug}}'
+    delete: 'Ta bort {{slug}}'
+    uploadMedia: 'Ladda upp {{path}}'
+    deleteMedia: 'Ta bort {{path}}'
+
+site_url: https://aktrofast.github.io/kimchi-och-kottbullar/
+display_url: https://aktrofast.github.io/kimchi-och-kottbullar/
+publish_mode: simple
+
+# Adresser/filnamn: "Regn på Jeju" → "regn-pa-jeju" (inga å/ä/ö eller mellanslag).
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: '-'
+  maxlength: 60
+
+# Standardmapp för media (används bara om ett fält inte anger något annat).
+media_folder: src/content/inlagg
+public_folder: ''
+
+# Bilder förminskas och görs om till WebP I TELEFONEN innan uppladdning:
+# längsta sidan max 2048 px, kvalitet 85. Originalen i kamerarullen påverkas inte.
+media_libraries:
+  default:
+    config:
+      slugify_filename: true
+      transformations:
+        raster_image:
+          format: webp
+          quality: 85
+          width: 2048
+          height: 2048
+
+collections:
+  - name: inlagg
+    label: Inlägg
+    label_singular: Inlägg
+    description: Skriv ett nytt inlägg eller ändra ett gammalt.
+    folder: src/content/inlagg
+    path: '{{slug}}/index'
+    # Bilder och videor sparas i samma mapp som inlägget.
+    media_folder: ''
+    public_folder: ''
+    create: true
+    slug: '{{year}}-{{month}}-{{day}}-{{title}}'
+    summary: '{{title}} · {{date}}'
+    sortable_fields:
+      fields: [date, title]
+      default:
+        field: date
+        direction: descending
+    thumbnail: bilder
+    fields:
+      - name: title
+        label: Rubrik
+        widget: string
+      - name: date
+        label: Datum
+        widget: datetime
+        time_format: false
+        date_format: YYYY-MM-DD
+        format: YYYY-MM-DD
+        default: '{{now}}'
+      - name: body
+        label: Text
+        widget: markdown
+        hint: 'Tomrad = nytt stycke. Markera text för fetstil, rubrik eller länk.'
+      - name: bilder
+        label: Bilder
+        widget: image
+        multiple: true
+        required: false
+        hint: 'Välj flera bilder på en gång. Den första blir omslagsbild. Dra för att ändra ordning.'
+      - name: videor
+        label: Videor
+        widget: file
+        multiple: true
+        required: false
+        accept: 'video/*'
+        hint: 'Korta videor (helst under 30 s, filmade i 1080p). Krymps automatiskt vid publicering.'
+      - name: platser
+        label: Platser (för kartan)
+        label_singular: Plats
+        widget: list
+        required: false
+        collapsed: true
+        summary: '{{namn}} {{datum}}'
+        hint: 'Platser du besökt under perioden inlägget handlar om.'
+        fields:
+          - name: namn
+            label: Namn
+            widget: string
+            hint: 't.ex. Busan'
+          - name: karta
+            label: Plats på kartan
+            widget: map
+            type: Point
+            decimals: 5
+            center: [127.0, 37.55]
+            zoom: 6
+            required: false
+            hint: 'Sök på namnet eller tryck på kartan.'
+          - name: datum
+            label: När (valfritt)
+            widget: string
+            required: false
+            hint: 't.ex. 3–20 okt'
+      - name: kommande
+        label: Kommande veckan (valfritt)
+        widget: object
+        required: false
+        collapsed: true
+        hint: 'Visas överst på startsidan och försvinner automatiskt efter datumet nedan.'
+        fields:
+          - name: text
+            label: Vad händer?
+            widget: string
+            required: false
+            hint: 't.ex. Vandring på Jeju'
+          - name: till
+            label: Visa till och med
+            widget: datetime
+            time_format: false
+            date_format: YYYY-MM-DD
+            format: YYYY-MM-DD
+            required: false
+      - name: utkast
+        label: Spara som utkast (syns inte på sidan)
+        widget: boolean
+        default: false
+        required: false
+
+  - name: installningar
+    label: Inställningar
+    files:
+      - name: sida
+        label: Sidans inställningar
+        file: src/data/installningar.json
+        fields:
+          - { name: titel, label: Sidans namn, widget: string }
+          - { name: underrubrik, label: Underrubrik, widget: string }
+          - name: ankomst
+            label: Ankomstdatum (för dagräknaren)
+            widget: datetime
+            time_format: false
+            date_format: YYYY-MM-DD
+            format: YYYY-MM-DD
+          - name: hemkomst
+            label: Hemkomstdatum (valfritt)
+            widget: datetime
+            time_format: false
+            date_format: YYYY-MM-DD
+            format: YYYY-MM-DD
+            required: false
+            hint: 'Efter detta datum visar räknaren "X dagar i Asien – nu hemma igen".'
+          - name: dagraknare
+            label: Text för dagräknaren
+            widget: string
+            hint: '{n} byts mot antal dagar, t.ex. "Dag {n} i Korea" eller "Dag {n} på resande fot"'

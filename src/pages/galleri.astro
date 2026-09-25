@@ -1,0 +1,37 @@
+---
+// Galleri: alla bilder och videor från alla inlägg, grupperade per inlägg (nyast först).
+import Base from '../layouts/Base.astro';
+import MediaGrid from '../components/MediaGrid.astro';
+import { getPosts, slugOf, mediaOf, formatDate, imagesOf, videosOf } from '../lib/posts';
+import { postUrl } from '../lib/url';
+
+const posts = (await getPosts()).filter((p) => mediaOf(p).length > 0);
+const totalImages = posts.reduce((n, p) => n + imagesOf(p).length, 0);
+const totalVideos = posts.reduce((n, p) => n + videosOf(p).length, 0);
+const escape = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+---
+
+<Base title="Galleri" active="galleri">
+  <div class="wrap">
+    <header class="page-head">
+      <h1>Galleri</h1>
+      <p>{totalImages} bilder{totalVideos > 0 && ` och ${totalVideos} ${totalVideos === 1 ? 'video' : 'videor'}`} från {posts.length} inlägg. Tryck på en bild för att se den i helskärm.</p>
+    </header>
+
+    {
+      posts.map((post) => (
+        <section class="gallery-group">
+          <header>
+            <h2><a href={postUrl(slugOf(post))}>{post.data.title}</a></h2>
+            <span>{formatDate(post.data.date)}</span>
+          </header>
+          <MediaGrid
+            items={mediaOf(post)}
+            layout="square"
+            caption={`Från: <a href="${postUrl(slugOf(post))}">${escape(post.data.title)}</a>`}
+          />
+        </section>
+      ))
+    }
+  </div>
+</Base>
