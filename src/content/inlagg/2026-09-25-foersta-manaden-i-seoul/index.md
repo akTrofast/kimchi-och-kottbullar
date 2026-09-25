@@ -1,97 +1,48 @@
 ---
-title: Första månaden i Seoul
+title: Första månaden i Seoul (1)
 date: 2026-09-26
 bilder:
-  - img_0741.webp
   - img_3245.webp
+  - img_3153.webp
+  - img_3166.webp
+  - img_3167.webp
+  - img_3171.webp
+  - img_3168.webp
   - img_3173.webp
+  - img_3186.webp
+  - img_3181.webp
+  - img_3200.webp
+  - img_3206.webp
+  - img_3209.webp
+  - img_3212.webp
+  - img_3210.webp
+  - img_3220.webp
   - img_3227.webp
   - img_3231.webp
   - img_3234.webp
   - img_3240.webp
-  - img_3242.webp
   - img_3251.webp
-  - img_3275.webp
-  - img_3277.webp
-  - img_3300.webp
-  - img_3306.webp
-  - img_3308.webp
-  - img_3319.webp
-  - img_3339.webp
-  - img_3336.webp
-  - img_3367.webp
-  - img_3373.webp
-  - img_3374.webp
-  - img_3381.webp
-  - img_3385.webp
-  - img_9051.webp
-  - img_3404.webp
-  - img_3414.webp
-  - img_3417.webp
-  - img_3439.webp
-  - img_1883.webp
-  - img_6109.webp
-  - img_6120.webp
-  - img_6125.webp
-  - img_1890.webp
-  - img_6149.webp
-  - img_1895.webp
-  - img_6165.webp
-  - img_1903.webp
-  - img_6178.webp
-  - img_3503.webp
-  - img_3619.webp
-  - img_3617.webp
-  - img_3616.webp
-  - img_3610.webp
-  - img_3501.webp
-  - img_3629.webp
-  - img_3625.webp
-  - img_3633.webp
-  - img_3643.webp
-  - img_3644.webp
-  - img_3641.webp
-  - img_3166.webp
-  - img_3168.webp
-  - img_3169.webp
-  - img_3186.webp
-  - img_3209.webp
-  - img_3210.webp
-  - img_3212.webp
-  - img_3220.webp
+  - img_3254.webp
+  - img_3253.webp
+  - img_3252.webp
 platser:
-  - namn: Gangnam
-    karta: '{"type":"Point","coordinates":[127.0473,37.5177]}'
-    datum: ''
-  - namn: Myeong-Dong
-    karta: '{"type":"Point","coordinates":[126.98509,37.56131]}'
-    datum: ''
-  - namn: Yeouido
-    karta: '{"type":"Point","coordinates":[126.92522,37.52567]}'
-    datum: ''
-  - namn: Namsan Tower
-    karta: '{"type":"Point","coordinates":[126.98729,37.55237]}'
+  - namn: Silim (boende)
+    karta: '{"type":"Point","coordinates":[126.92729,37.49085]}'
     datum: ''
   - namn: SNU
     karta: '{"type":"Point","coordinates":[126.95157,37.46232]}'
     datum: ''
-  - namn: Hongdae
-    karta: '{"type":"Point","coordinates":[126.92251,37.55444]}'
+  - namn: Yeouido
+    karta: '{"type":"Point","coordinates":[126.92522,37.52567]}'
     datum: ''
-  - namn: Dongdaemun
-    karta: '{"type":"Point","coordinates":[127.00762,37.56881]}'
+  - namn: Gangnam
+    karta: '{"type":"Point","coordinates":[127.0473,37.5177]}'
     datum: ''
-  - namn: Itaewon
-    karta: '{"type":"Point","coordinates":[126.99437,37.5345]}'
+  - namn: Namsan Tower
+    karta: '{"type":"Point","coordinates":[126.98729,37.55237]}'
     datum: ''
-  - namn: Yongsan
-    karta: '{"type":"Point","coordinates":[126.99,37.5323]}'
-    datum: ''
-  - namn: Silim (boende)
-    karta: '{"type":"Point","coordinates":[126.92729,37.49085]}'
-    datum: ''
-  - namn: Jamsil
-    karta: '{"type":"Point","coordinates":[127.10014,37.51322]}'
+  - namn: Myeong-Dong
+    karta: '{"type":"Point","coordinates":[126.98509,37.56131]}'
     datum: ''
 kommande:
   text: Chuseok ceremonier; Bestiga Bukhansan
