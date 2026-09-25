@@ -28,7 +28,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04 # låst version, så att GitHubs byte av "latest" inte kan påverka
     outputs:
       site_url: ${{ steps.pages.outputs.base_url }}
     steps:
@@ -77,7 +77,7 @@ jobs:
 
   deploy:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04 # låst version, så att GitHubs byte av "latest" inte kan påverka
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -87,7 +87,7 @@ jobs:
 
   notify:
     needs: [build, deploy]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04 # låst version, så att GitHubs byte av "latest" inte kan påverka
     steps:
       - uses: actions/checkout@v7
         with:
@@ -120,7 +120,7 @@ jobs:
   kontroll:
     name: Kontrollera att alla bilder kom med
     needs: deploy
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04 # låst version, så att GitHubs byte av "latest" inte kan påverka
     steps:
       - uses: actions/checkout@v7
         with:
