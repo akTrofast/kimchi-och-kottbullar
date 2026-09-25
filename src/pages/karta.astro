@@ -40,7 +40,7 @@ const places = groups.map((g) => ({
   <div class="wrap">
     <header class="page-head">
       <h1>Karta</h1>
-      <p>{places.length} platser hittills. Tryck på en nål för att se inläggen därifrån.</p>
+      <p>{places.length > 0 ? `${places.length} platser hittills. Tryck på en nål för att se inläggen därifrån.` : 'Kartan fylls på med platser allteftersom inläggen publiceras.'}</p>
     </header>
   </div>
   <div class="wrap">

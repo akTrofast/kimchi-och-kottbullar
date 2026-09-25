@@ -31,7 +31,7 @@ Alexanders utbytesblogg från Seoul (hösten 2026). Svenska, publik, ingen inlog
 - `npm run dev` – lokal utveckling (bildoptimering i dev är långsam; för skärmdumpar använd
   `npm run build` + `npm run preview`).
 - `npm run videos` – krymp videor lokalt.
-- `npm run examples` – återskapa exempelbilder/ikoner (bara för exempelinläggen).
+- `npm run examples` – återskapa ikonerna (med `-- --med-exempel` även exempelbilder; exempelinläggen är borttagna).
 
 ## Kända avvägningar
 - Sidan får vara max 1 GB på GitHub Pages; videor krymps därför hårt.

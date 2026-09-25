@@ -116,6 +116,12 @@ await sharp(Buffer.from(icon)).resize(192, 192).png().toFile('public/icon-192.pn
 await sharp(Buffer.from(icon)).resize(512, 512).png().toFile('public/icon-512.png');
 
 // ---------- Exempelinlägg ----------
+// Skapar bara media för exempelinläggen om man uttryckligen ber om det
+// (`npm run examples -- --med-exempel`). Standard: bara ikonerna ovan.
+if (!process.argv.includes('--med-exempel')) {
+  console.log('Ikoner skapade. (Lägg till --med-exempel för att även skapa exempelbilder.)');
+  process.exit(0);
+}
 const R = 'src/content/inlagg';
 const posts = [
   {

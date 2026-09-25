@@ -15,7 +15,8 @@ const escape = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': 
   <div class="wrap">
     <header class="page-head">
       <h1>Galleri</h1>
-      <p>{totalImages} bilder{totalVideos > 0 && ` och ${totalVideos} ${totalVideos === 1 ? 'video' : 'videor'}`} från {posts.length} inlägg. Tryck på en bild för att se den i helskärm.</p>
+      {posts.length === 0 && <p>Här samlas alla bilder så fort första inlägget är publicerat.</p>}
+      <p hidden={posts.length === 0}>{totalImages} bilder{totalVideos > 0 && ` och ${totalVideos} ${totalVideos === 1 ? 'video' : 'videor'}`} från {posts.length} inlägg. Tryck på en bild för att se den i helskärm.</p>
     </header>
 
     {
