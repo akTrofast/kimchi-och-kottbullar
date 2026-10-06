@@ -2,8 +2,10 @@
 title: Chuseok, matfestivalen och köttbullarnas andraplats
 date: 2026-10-06
 bilder:
+  - img_3674.webp
   - img_3707.webp
   - img_3708.webp
+  - img_3658.webp
 videor: []
 platser:
   - namn: SNU
