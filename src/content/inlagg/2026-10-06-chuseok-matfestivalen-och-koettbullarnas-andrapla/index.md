@@ -9,7 +9,9 @@ bilder:
   - img_3641.webp
   - img_3639.webp
   - img_3629.webp
-videor: []
+videor:
+  - jungmin-on-it-web.mp4
+  - lion-dance-web.mp4
 platser:
   - namn: SNU
     karta: '{"type":"Point","coordinates":[126.95037,37.45824]}'
