@@ -20,7 +20,7 @@ platser:
     karta: '{"type":"Point","coordinates":[127.13093,37.51615]}'
     datum: ''
 kommande: null
-utkast: true
+utkast: false
 ---
 
 Chuseok, också kallat Korean Midsummer-Autumn Festival, är Koreas motsvarighet till amerikas thanksgiving. Enligt tradition åker under helgen då månen är som starkast samtliga korean hem och äter stora bufféer för att bunkra upp energin inför den kalla vintern. Naturligtvis är behoven för detta inte likadana idag, något en av mina professorer höll ett ganska underhållande och komiskt tal om istället för att diskutera det koreanska kraftsystemet skörhet. 
