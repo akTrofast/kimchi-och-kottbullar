@@ -1,5 +1,5 @@
 ---
-title: Chuseok, matfestivalen och köttbullarnas andraplats
+title: Chuseok och SNUs matfestival
 date: 2026-10-06
 bilder:
   - img_3674.webp
