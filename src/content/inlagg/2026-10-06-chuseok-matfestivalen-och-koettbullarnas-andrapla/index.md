@@ -6,6 +6,9 @@ bilder:
   - img_3707.webp
   - img_3708.webp
   - img_3658.webp
+  - img_3641.webp
+  - img_3639.webp
+  - img_3629.webp
 videor: []
 platser:
   - namn: SNU
