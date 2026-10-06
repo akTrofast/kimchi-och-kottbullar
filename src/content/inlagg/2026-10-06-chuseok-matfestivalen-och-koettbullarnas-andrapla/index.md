@@ -23,7 +23,9 @@ kommande: null
 utkast: false
 ---
 
-Chuseok, också kallat Korean Midsummer-Autumn Festival, är Koreas motsvarighet till amerikas thanksgiving. Enligt tradition åker under helgen då månen är som starkast samtliga korean hem och äter stora bufféer för att bunkra upp energin inför den kalla vintern. Naturligtvis är behoven för detta inte likadana idag, något en av mina professorer höll ett ganska underhållande och komiskt tal om istället för att diskutera det koreanska kraftsystemet skörhet. 
+Chuseok, också kallat Korean Midsummer-Autumn Festival, är Koreas motsvarighet till amerikas thanksgiving. 
+
+Enligt tradition åker under helgen då månen är som starkast samtliga korean hem och äter stora bufféer för att bunkra upp energin inför den kalla vintern. Naturligtvis är behoven för detta inte likadana idag, något en av mina professorer höll ett ganska underhållande och komiskt tal om istället för att diskutera det koreanska kraftsystemet skörhet. 
 
 Högtidens familjeanknytning är dock i praktiken mycket mer märkbar än buffe-delen (även om denna var väldigt uppskattad hehe) och i dess anda bjöd SNU, specifikt deras College of Engineering som jag är del av, in internationella studenter till ett härligt event bestående av god mat samt koreanska lekar och traditioner. I ett komiskt missförstånd blev de fyra vänner jag bjöd in till eventet tagna för min "extended family" vilket skrattades om regelbundet under kvällen. I en av videorna kan ni se en av dem koreanska lekarna som anordnades där man ska lyckas flippa den liggande rutan genom att kasta ännu en ruta på den ovanifrån. I videon är det min koreanska vän Jungmin (정민) som demonstrerar väl hur svår leken faktiskt var. Utöver detta gjorde vi så kallade Sungpyeon för hand och tog det av ett lotteri där de gav ut så grandiösa priser som Sony hörlurar, Airpods och en Apple watch - dessvärre hade jag inte turen att vinna något.
 
