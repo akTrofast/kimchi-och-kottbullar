@@ -8,9 +8,7 @@ platser:
   - namn: Seoul Olympic Park
     karta: '{"type":"Point","coordinates":[127.13093,37.51615]}'
     datum: ''
-kommande:
-  text: Den nödvändiga resan till Busan
-  till: 2026-10-12
+kommande: null
 utkast: true
 ---
 
