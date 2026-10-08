@@ -13,13 +13,20 @@ bilder:
   - img_3812.webp
   - img_3817.webp
   - img_3832.webp
+  - img_3821.webp
+  - img_3818.webp
+  - img_3782.webp
+  - img_3731.webp
+  - img_3714.webp
 videor: []
 platser:
   - namn: Shanghai
     karta: '{"type":"Point","coordinates":[121.47002,31.23127]}'
     datum: ''
-kommande: null
-utkast: true
+kommande:
+  text: Den förväntade resan till Busan
+  till: 2026-10-12
+utkast: false
 ---
 
 Historiskt sätt är jag inte en speciellt spontan person. Jag gillar att planera i god tid och ha koll på läget. När mina vänner kvällen innan matfestivalen frågade om jag ville åka till Shanghai ”imorgon eftermiddag” var min första tanke ”…va?”. Det visade sig dock svårare att komma på en anledning att inte göra det så ungefär 16 timmar efter beslutet togs var jag återigen på Incheons flygplats, denna gång på väg till Kina för första gången.
