@@ -19,7 +19,7 @@ platser:
     karta: '{"type":"Point","coordinates":[121.47002,31.23127]}'
     datum: ''
 kommande: null
-utkast: false
+utkast: true
 ---
 
 Historiskt sätt är jag inte en speciellt spontan person. Jag gillar att planera i god tid och ha koll på läget. När mina vänner kvällen innan matfestivalen frågade om jag ville åka till Shanghai ”imorgon eftermiddag”
