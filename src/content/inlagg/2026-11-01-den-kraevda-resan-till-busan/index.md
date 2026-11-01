@@ -1,6 +1,6 @@
 ---
 title: Den obligatoriska resan till Busan
-date: 2026-10-09
+date: 2026-10-16
 bilder:
   - img_3873.webp
   - img_3875.webp
