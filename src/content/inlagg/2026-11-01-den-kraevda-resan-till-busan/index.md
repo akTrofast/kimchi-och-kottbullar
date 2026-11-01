@@ -23,7 +23,7 @@ platser:
     karta: '{"type":"Point","coordinates":[129.07524,35.17995]}'
     datum: ''
 kommande: null
-utkast: true
+utkast: false
 ---
 
 När dem flesta tanker på Sydkorea är de två städer man hör nämnas huvudstaden Seoul och kuststaden Busan. Naturligtvis var därför ända slutsatsen att vi behövde åka dit, det var obligatoriskt.
