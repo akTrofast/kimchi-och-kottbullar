@@ -1,7 +1,8 @@
 ---
 title: Konvergens i Tokyo - elva svennar intar soluppgångens land
-date: 2026-11-14
+date: 2026-10-30
 bilder:
+  - tokyo-14.webp
   - tokyo-01.webp
   - tokyo-02.webp
   - tokyo-03.webp
@@ -15,7 +16,6 @@ bilder:
   - tokyo-11.webp
   - tokyo-12.webp
   - tokyo-13.webp
-  - tokyo-14.webp
   - tokyo-15.webp
   - tokyo-16.webp
   - tokyo-17.webp
@@ -53,7 +53,9 @@ platser:
   - namn: Tokyo Skytree
     karta: '{"type":"Point","coordinates":[139.8107,35.7101]}'
     datum: ''
-kommande: null
+kommande:
+  text: Nattpromenader i Osaka
+  till: 2026-11-18
 utkast: true
 ---
 
