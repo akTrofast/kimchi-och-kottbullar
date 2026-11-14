@@ -56,7 +56,7 @@ platser:
 kommande:
   text: Nattpromenader i Osaka
   till: 2026-11-18
-utkast: true
+utkast: false
 ---
 
 I efterhand kanske det var självklart att alla svennar som gjorde sitt utbyte i Asien någon gång skulle till Japan. Det kanske också i efterhand var självklart att någon i varje land; Sydkorea, Hong Kong och Singapore, skulle fråga någon i en annan grupp vilka datum de tänkte dra dit och koordinera därefter. Med det sagt reflekterade jag regelbundet under vår tio dagar långa resa i städerna Tokyo, Osaka, Kyoto, Kobe och Nara om hur galet det hela var. Hur sjukt är det inte att vi är elva svennar som möts från våra olika utbyten i Asien i Japan?
