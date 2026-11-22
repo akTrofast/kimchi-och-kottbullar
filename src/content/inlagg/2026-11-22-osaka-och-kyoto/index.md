@@ -1,8 +1,8 @@
 ---
-title: 'Osaka, Kobe, Nara och Kyoto; nattpromenader, utsökt nötkött, bugande hjortar och en magisk hike'
+title: Osaka, Kobe, Nara och Kyoto; nattpromenader, utsökt nötkött, bugande hjortar och en magisk hike
 date: 2026-11-22
-utkast: true
 bilder:
+  - osaka-kyoto-15.webp
   - osaka-kyoto-01.webp
   - osaka-kyoto-02.webp
   - osaka-kyoto-03.webp
@@ -17,7 +17,6 @@ bilder:
   - osaka-kyoto-12.webp
   - osaka-kyoto-13.webp
   - osaka-kyoto-14.webp
-  - osaka-kyoto-15.webp
   - osaka-kyoto-16.webp
   - osaka-kyoto-17.webp
   - osaka-kyoto-18.webp
@@ -82,6 +81,8 @@ platser:
   - namn: Fushimi Inari Taisha
     karta: '{"type":"Point","coordinates":[135.7727,34.9671]}'
     datum: ''
+kommande: null
+utkast: false
 ---
 
 Efter fem fantastiska dagar i Tokyo, avrundade med en sista promenad genom den kungliga trädgården, tog vi Shinkansen med en snitthastighet över 250 km/h mot Osaka. För mig som redan uppskattar tågupplevelsen man får av SJ hemma var resan som erbjöd vackra vyer av den japanska landsbyggden på löpande band ett stort nöje.
